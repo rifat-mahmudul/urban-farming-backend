@@ -8,11 +8,15 @@ export const auth =
   (...requiredRoles: string[]) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token = req.headers.authorization;
+      const authHeader = req.headers.authorization;
 
-      if (!token) {
+      if (!authHeader) {
         throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized");
       }
+
+      const token = authHeader.startsWith("Bearer ")
+        ? authHeader.split(" ")[1]
+        : authHeader;
 
       const verifiedToken = verifyToken(token, jwtConfig.accessToken) as any;
 
