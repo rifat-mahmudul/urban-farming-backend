@@ -14,7 +14,8 @@ model User {
   password      String
   role          Role           @default(CUSTOMER)
   vendorProfile VendorProfile?
-  cart  Cart[]
+  cart          Cart[]
+  orders        Order[]
   createdAt     DateTime       @default(now())
 }
 
@@ -49,9 +50,11 @@ model Product {
   vendor   VendorProfile @relation(fields: [vendorId], references: [id])
 
   categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-  cart  Cart[]
-  createdAt  DateTime @default(now())
+  category   Category    @relation(fields: [categoryId], references: [id])
+  cart       Cart[]
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
 }
 
 model Category {
@@ -62,15 +65,46 @@ model Category {
 }
 
 model Cart {
-  id        String   @id @default(uuid())
+  id        String @id @default(uuid())
   userId    String
   productId String
-  quantity  Int      @default(1)
+  quantity  Int    @default(1)
 
-  user      User     @relation(fields: [userId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 
   createdAt DateTime @default(now())
 
   @@unique([userId, productId])
+}
+
+model Order {
+  id     String      @id @default(uuid())
+  userId String
+  total  Float
+  status OrderStatus @default(PENDING)
+
+  user  User        @relation(fields: [userId], references: [id])
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id        String @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }
