@@ -144,11 +144,5 @@ In **Swagger UI**, click the **"Authorize"** button and enter your Bearer token 
 
 ---
 
-## 📝 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
 ### 👨‍💻 Developed By
-**Mahmudul Hasan Rifat** *Full-stack Web Developer | MERN & Next.js Specialist* [GitHub Profile](https://github.com/rifat-mahmudul)
+**Mahmudul Hasan Rifat** *Full-stack Web Developer | MERN & Next.js Specialist* [Portfolio](https://mahmudulhasanrifat.vercel.app/)
