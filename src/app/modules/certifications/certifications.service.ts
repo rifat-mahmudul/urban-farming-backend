@@ -1,4 +1,6 @@
+import AppError from "../../../errors/appError";
 import { prisma } from "../../../lib/prisma";
+import httpStatus from "http-status-codes"
 
 const createCertification = async (userId: string, payload: any) => {
   const vendor = await prisma.vendorProfile.findUnique({
@@ -6,7 +8,7 @@ const createCertification = async (userId: string, payload: any) => {
   });
 
   if (!vendor) {
-    throw new Error("Vendor profile not found");
+    throw new AppError(httpStatus.BAD_REQUEST, "Vendor profile not found");
   }
 
   return prisma.sustainabilityCert.create({

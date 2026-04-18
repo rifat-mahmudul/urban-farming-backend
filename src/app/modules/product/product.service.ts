@@ -1,4 +1,6 @@
+import AppError from "../../../errors/appError";
 import { prisma } from "../../../lib/prisma";
+import httpStatus from "http-status-codes"
 
 interface ProductPayload {
   name: string;
@@ -22,7 +24,7 @@ const createProduct = async (userId: string, payload: ProductPayload) => {
   });
 
   if (!vendor) {
-    throw new Error("Vendor not found");
+    throw new AppError(httpStatus.BAD_REQUEST, "Vendor not found");
   }
 
   const product = await prisma.product.create({
