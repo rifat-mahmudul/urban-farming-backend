@@ -275,7 +275,6 @@ paths:
 
   # ================= ORDER =================
 
-  # ================= SECURITY =================
   /api/v1/orders:
     post:
       summary: Create Order from Cart
@@ -351,6 +350,81 @@ paths:
                           type: string
                         createdAt:
                           type: string
+
+  # ================= RENTAL =================
+  /api/v1/rentals:
+    post:
+      summary: Create Farm Space
+      tags: [Rental]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, location, size, pricePerDay]
+              properties:
+                title:
+                  type: string
+                  example: "Organic Farm Plot"
+                location:
+                  type: string
+                  example: "Dhaka"
+                size:
+                  type: number
+                  example: 100
+                pricePerDay:
+                  type: number
+                  example: 500
+      responses:
+        "201":
+          description: Farm space created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+    get:
+      summary: Get All Farm Spaces
+      tags: [Rental]
+      responses:
+        "200":
+          description: Spaces fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/v1/rentals/book:
+    post:
+      summary: Book Farm Space
+      tags: [Rental]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [spaceId, startDate, endDate]
+              properties:
+                spaceId:
+                  type: string
+                  example: "uuid-space-id"
+                startDate:
+                  type: string
+                  example: "2026-04-20"
+                endDate:
+                  type: string
+                  example: "2026-04-25"
+      responses:
+        "201":
+          description: Space booked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  # ================= SECURITY =================
 
 components:
   securitySchemes:
