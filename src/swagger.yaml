@@ -512,6 +512,36 @@ paths:
                         certificationDate:
                           type: string
 
+  # ================= COMMUNITY =================
+  /api/v1/community:
+    post:
+      summary: Create community post
+      tags: [Community]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - postContent
+              properties:
+                postContent:
+                  type: string
+                  example: "Best organic farming tips for beginners"
+      responses:
+        "201":
+          description: Post created successfully
+
+    get:
+      summary: Get all community posts
+      tags: [Community]
+      responses:
+        "200":
+          description: Posts fetched successfully
+
   # ================= SECURITY =================
 components:
   securitySchemes:
