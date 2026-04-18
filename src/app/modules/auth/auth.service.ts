@@ -1,7 +1,7 @@
 import AppError from "../../../errors/appError";
-import { prisma } from "../../../lib/prisma";
 import bcrypt from "bcrypt";
 import httpStatus from "http-status-codes";
+import { prisma } from "../../../lib/prisma";
 
 interface RegisterInfo {
   name: string;
@@ -21,14 +21,16 @@ const register = async (payload: RegisterInfo) => {
   const hashedPassword = await bcrypt.hash(payload.password, 10);
 
   const user = await prisma.user.create({
-    name: payload.name,
-    email: payload.email,
-    password: hashedPassword,
+    data: {
+      name: payload.name,
+      email: payload.email,
+      password: hashedPassword,
+    },
   });
 
   return user;
 };
 
 export const AuthServices = {
-    register
-}
+  register,
+};
