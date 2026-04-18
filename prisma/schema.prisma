@@ -38,6 +38,7 @@ model VendorProfile {
   user     User          @relation(fields: [userId], references: [id])
   products Product[]
   spaces   RentalSpace[]
+  certifications SustainabilityCert[]
 }
 
 model Product {
@@ -144,4 +145,13 @@ enum BookingStatus {
   PENDING
   CONFIRMED
   CANCELLED
+}
+
+model SustainabilityCert {
+  id                String   @id @default(uuid())
+  vendorId          String
+  certifyingAgency  String
+  certificationDate DateTime
+
+  vendor VendorProfile @relation(fields: [vendorId], references: [id])
 }

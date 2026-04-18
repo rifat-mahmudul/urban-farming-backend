@@ -424,8 +424,95 @@ paths:
               schema:
                 type: object
 
-  # ================= SECURITY =================
+  # ================= CERTIFICATION =================
+  /api/v1/certifications:
+    post:
+      summary: Submit Certification
+      tags: [Certification]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - certifyingAgency
+                - certificationDate
+              properties:
+                certifyingAgency:
+                  type: string
+                  example: "Organic Board BD"
+                certificationDate:
+                  type: string
+                  example: "2026-04-18"
+      responses:
+        "201":
+          description: Certification submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 201
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Certification submitted"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      vendorId:
+                        type: string
+                      certifyingAgency:
+                        type: string
+                      certificationDate:
+                        type: string
 
+    get:
+      summary: Get all certifications (Admin)
+      tags: [Certification]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Certifications fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Certifications fetched successfully"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        vendorId:
+                          type: string
+                        certifyingAgency:
+                          type: string
+                        certificationDate:
+                          type: string
+
+  # ================= SECURITY =================
 components:
   securitySchemes:
     bearerAuth:
