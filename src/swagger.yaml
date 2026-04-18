@@ -3,23 +3,26 @@ info:
   title: Urban Farming API
   version: 1.0.0
 
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+servers:
+  - url: http://localhost:5000
 
 paths:
+  # ================= AUTH =================
+
   /api/v1/auth/register:
     post:
       summary: Register user
+      tags: [Auth]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - name
+                - email
+                - password
               properties:
                 name:
                   type: string
@@ -28,11 +31,12 @@ paths:
                 password:
                   type: string
       responses:
-        201:
+        "201":
           description: User created
+
   /api/v1/auth/login:
     post:
-      summary: User Login
+      summary: User login
       tags: [Auth]
       requestBody:
         required: true
@@ -46,39 +50,20 @@ paths:
               properties:
                 email:
                   type: string
-                  example: test@gmail.com
                 password:
                   type: string
-                  example: 123456
-
       responses:
-        200:
-          description: Login Successful
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  statusCode:
-                    type: number
-                  message:
-                    type: string
-                  data:
-                    type: object
-                    properties:
-                      accessToken:
-                        type: string
-                      refreshToken:
-                        type: string
-                      user:
-                        type: object
+        "200":
+          description: Login successful
+
+  # ================= VENDOR =================
+
   /api/v1/vendors:
     post:
-      summary: Create Vendor Profile
-      tags:
-        - Vendor
+      summary: Create vendor profile
+      tags: [Vendor]
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -86,35 +71,120 @@ paths:
             schema:
               type: object
               required:
-                - userId
                 - farmName
                 - farmLocation
               properties:
-                userId:
-                  type: string
                 farmName:
                   type: string
                 farmLocation:
                   type: string
       responses:
         "201":
-          description: Vendor created successfully
+          description: Vendor created
 
     get:
       summary: Get all vendors
-      tags:
-        - Vendor
+      tags: [Vendor]
       responses:
         "200":
-          description: Vendors fetched successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  data:
-                    type: array
-                    items:
-                      type: object
+          description: Vendors fetched
+
+  # ================= CATEGORY =================
+  /api/v1/categories:
+    post:
+      summary: Create category (Admin only)
+      tags: [Category]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+      responses:
+        "201":
+          description: Category created
+
+    get:
+      summary: Get all categories
+      tags: [Category]
+      responses:
+        "200":
+          description: Categories fetched successfully
+
+  # ================= PRODUCT =================
+
+  /api/v1/products:
+    get:
+      summary: Get all products (filter + pagination)
+      tags: [Product]
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: categoryId
+          schema:
+            type: string
+        - in: query
+          name: vendorId
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: number
+        - in: query
+          name: limit
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Products fetched
+
+    post:
+      summary: Create product (Vendor only)
+      tags: [Product]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - price
+                - quantity
+                - categoryId
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                quantity:
+                  type: number
+                description:
+                  type: string
+                categoryId:
+                  type: string
+      responses:
+        "201":
+          description: Product created
+
+# ================= SECURITY =================
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
