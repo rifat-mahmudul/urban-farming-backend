@@ -5,6 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import notFound from "./app/middlewares/notFound";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import { apiLimiter } from "./app/middlewares/rateLimiter";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(
   }),
 );
 app.use(express.json());
+app.use(apiLimiter);
 
 const swaggerDoc = YAML.load("./src/swagger.yaml");
 
