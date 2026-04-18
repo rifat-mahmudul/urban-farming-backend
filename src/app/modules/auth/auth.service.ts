@@ -28,7 +28,9 @@ const register = async (payload: RegisterInfo) => {
     },
   });
 
-  return user;
+  const { password, ...userWithoutPassword } = user;
+
+  return userWithoutPassword;
 };
 
 export const AuthServices = {

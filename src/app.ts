@@ -3,6 +3,8 @@ import cors from "cors";
 import router from "./app/routes";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
+import notFound from "./app/middlewares/notFound";
+import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 
 const app = express();
 
@@ -26,5 +28,9 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.use("/api/v1", router);
+
+app.use(notFound);
+
+app.use(globalErrorHandler);
 
 export default app;
